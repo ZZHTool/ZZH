@@ -142,7 +142,12 @@ int GetregistryIntValue(const wchar_t* keyPath, const wchar_t* valueName)
 	return intValue;
 }
 // CHome 消息处理程序
-
+void CHome::CreateAndShowDialog(CDialogEx& dlg, UINT nIDTemplate, int x, int y)
+{
+	dlg.Create(nIDTemplate, this);
+	dlg.SetWindowPos(NULL, x, y, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
+	dlg.ShowWindow(SW_HIDE);
+}
 BOOL CHome::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
@@ -159,33 +164,15 @@ BOOL CHome::OnInitDialog()
 	NotifyIcon.uFlags = NIF_ICON | NIF_MESSAGE | NIF_TIP;
 	Shell_NotifyIcon(NIM_ADD, &NotifyIcon);   //添加系统托盘 
 
-	homedlg.Create(IDD_MFCAPPLICATION2_DIALOG, this);
-	homedlg.SetWindowPos(NULL, 60, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	homedlg.ShowWindow(SW_SHOW);
-	xtdlg.Create(IDD_XT, this);
-	xtdlg.SetWindowPos(NULL, 40, 55, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	xtdlg.ShowWindow(SW_HIDE);
-	zizhidlg.Create(IDD_ZIZHI, this);
-	zizhidlg.SetWindowPos(NULL, 80, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	zizhidlg.ShowWindow(SW_HIDE);
-	cleandlg.Create(IDD_CLEARUP_DIALOG, this);
-	cleandlg.SetWindowPos(NULL, 50, 80, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	cleandlg.ShowWindow(SW_HIDE);
-	myfiledlg.Create(IDD_FILEINFO_DIALOG, this);
-	myfiledlg.SetWindowPos(NULL, 5, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	myfiledlg.ShowWindow(SW_HIDE);
-	uninstalldlg.Create(IDD_UNINSTALL_DIALOG, this);
-	uninstalldlg.SetWindowPos(NULL, 5, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	uninstalldlg.ShowWindow(SW_HIDE);
-	servicedlg.Create(IDD_SERVICE_DIALOG, this);
-	servicedlg.SetWindowPos(NULL, 5, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	servicedlg.ShowWindow(SW_HIDE);
-	startupdlg.Create(IDD_STARTUP_DIALOG, this);
-	startupdlg.SetWindowPos(NULL, 5, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	startupdlg.ShowWindow(SW_HIDE);
-	processdlg.Create(IDD_TASK_DIALOG, this);
-	processdlg.SetWindowPos(NULL, 5, 70, 0, 0, SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE);
-	processdlg.ShowWindow(SW_HIDE);
+	CreateAndShowDialog(homedlg, IDD_MFCAPPLICATION2_DIALOG, 60, 70);
+	CreateAndShowDialog(xtdlg, IDD_XT, 40, 55);
+	CreateAndShowDialog(zizhidlg, IDD_ZIZHI, 80, 70);
+	CreateAndShowDialog(cleandlg, IDD_CLEARUP_DIALOG, 50, 80);
+	CreateAndShowDialog(myfiledlg, IDD_FILEINFO_DIALOG, 5, 70);
+	CreateAndShowDialog(uninstalldlg, IDD_UNINSTALL_DIALOG, 5, 70);
+	CreateAndShowDialog(servicedlg, IDD_SERVICE_DIALOG, 5, 70);
+	CreateAndShowDialog(startupdlg, IDD_STARTUP_DIALOG, 5, 70);
+	CreateAndShowDialog(processdlg, IDD_TASK_DIALOG, 5, 70);
 
 	m_home.SetMouseCursorHand();
 	m_home.SetMouseCursorHand();

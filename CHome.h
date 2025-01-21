@@ -48,6 +48,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	HICON m_hIcon;
+	void CreateAndShowDialog(CDialogEx& dlg, UINT nIDTemplate, int x, int y);
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	void OnPaint();
