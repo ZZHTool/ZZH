@@ -48,6 +48,7 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	HICON m_hIcon;
+	void CreateAndShowDialog(CDialogEx& dlg, UINT nIDTemplate, int x, int y);
 	// 生成的消息映射函数
 	virtual BOOL OnInitDialog();
 	void OnPaint();
@@ -74,6 +75,7 @@ public:
 	afx_msg void OnBnClickedButton8();
 	afx_msg void OnBnClickedButton10();
 	afx_msg void OnBnClickedButton11();
+	afx_msg void OnBnClickedButton12();
 	CMenu m_Menu;
 	CWinThread* m_pCleanThread;
 
@@ -105,6 +107,5 @@ public:
 	CStatic m_battery;
 	UINT_PTR m_nTimerID;
 	UINT_PTR m_CleanTimer;
-	afx_msg void OnBnClickedButton12();
 };
 
