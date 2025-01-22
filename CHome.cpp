@@ -176,10 +176,8 @@ BOOL CHome::OnInitDialog()
 	CreateAndShowDialog(processdlg, IDD_TASK_DIALOG, 5, 70);
 
 	m_home.SetMouseCursorHand();
-	m_home.SetMouseCursorHand();
 	m_xt.SetMouseCursorHand();
-	m_xt.SetMouseCursorHand();
-	m_clean.SetMouseCursorHand();
+	m_zizhi.SetMouseCursorHand();
 	m_clean.SetMouseCursorHand();
 	m_explorer.SetMouseCursorHand();
 	m_uninstall.SetMouseCursorHand();
