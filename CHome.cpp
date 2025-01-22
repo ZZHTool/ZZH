@@ -187,6 +187,7 @@ BOOL CHome::OnInitDialog()
 	m_hide.SetMouseCursorHand();
 	m_restart.SetMouseCursorHand();
 
+	int set = 90;
 	HKEY hKey;
 	HKEY hKey1;
 	CString lpRun = L"SOFTWARE\\ZZH System Tool";
@@ -198,24 +199,26 @@ BOOL CHome::OnInitDialog()
 	{
 		long result = RegCreateKeyExW(HKEY_CURRENT_USER, lpRun, 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL);
 		long result1 = RegCreateKeyExW(HKEY_CURRENT_USER, lpRun2, 0, NULL, 0, KEY_WRITE, NULL, &hKey1, NULL);
-		if (result != ERROR_SUCCESS || result1 != ERROR_SUCCESS)
+		long result2 = RegCreateKeyExW(HKEY_CURRENT_USER, lpRun2, 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL);
+		RegOpenKeyExW(HKEY_CURRENT_USER, lpRun2, 0, KEY_ALL_ACCESS, &hKey1);
+		long result3 = RegSetValueExW(hKey, L"setting", 0, REG_DWORD, reinterpret_cast<BYTE*>(&set), sizeof(DWORD));
+		if (result != ERROR_SUCCESS || result1 != ERROR_SUCCESS || result2 != ERROR_SUCCESS || result3 != ERROR_SUCCESS)
 		{
 			MessageBoxW(L"软件相关服务出现错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+			system("taskkill -f -im ZZH系统工具.exe");
 		}
 	}
-
-	CXieyi xieyi;
-	xieyi.DoModal();
-
 	lRet = RegOpenKeyExW(HKEY_CURRENT_USER, lpRun2, 0, KEY_ALL_ACCESS, &hKey);
 	if (lRet != ERROR_SUCCESS)
 	{
-		RegCreateKeyExW(HKEY_CURRENT_USER, lpRun2, 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL);
-	}
-	lRet = RegOpenKeyExW(HKEY_CURRENT_USER, lpRun1, 0, KEY_ALL_ACCESS, &hKey);
-	if (lRet != ERROR_SUCCESS)
-	{
-		m_pCleanThread = AfxBeginThread(clean, this);
+		long result = RegCreateKeyExW(HKEY_CURRENT_USER, lpRun2, 0, NULL, 0, KEY_WRITE, NULL, &hKey, NULL);
+		long result1 = RegOpenKeyExW(HKEY_CURRENT_USER, lpRun2, 0, KEY_ALL_ACCESS, &hKey1);
+		long result2 = RegSetValueExW(hKey, L"setting", 0, REG_DWORD, reinterpret_cast<BYTE*>(&set), sizeof(DWORD));
+		if (result != ERROR_SUCCESS || result1 != ERROR_SUCCESS || result2 != ERROR_SUCCESS)
+		{
+			MessageBoxW(L"软件相关服务出现错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+			system("taskkill -f -im ZZH系统工具.exe");
+		}
 	}
 	lRet = RegOpenKeyExW(HKEY_CURRENT_USER, lpRun3, 0, KEY_ALL_ACCESS, &hKey1);
 	if (lRet != ERROR_SUCCESS)
@@ -224,6 +227,15 @@ BOOL CHome::OnInitDialog()
 		int b = a * 0.01 * 255;
 		SetWindowLongPtr(m_hWnd, GWL_EXSTYLE, GetWindowLongPtr(m_hWnd, GWL_EXSTYLE) | WS_EX_LAYERED);
 		SetLayeredWindowAttributes(0, b, LWA_ALPHA);
+	}
+
+	CXieyi xieyi;
+	xieyi.DoModal();
+
+	lRet = RegOpenKeyExW(HKEY_CURRENT_USER, lpRun1, 0, KEY_ALL_ACCESS, &hKey);
+	if (lRet != ERROR_SUCCESS)
+	{
+		m_pCleanThread = AfxBeginThread(clean, this);
 	}
 	RegCloseKey(hKey);
 	RegCloseKey(hKey1);
