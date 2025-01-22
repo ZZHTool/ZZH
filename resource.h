@@ -972,7 +972,6 @@
 #define IDD_TASK_DIALOG                 177
 #define VK_MEDIA_STOP                   0xB2
 #define EM_GETRECT                      0x00B2
-#define IDD_SETTINGS1                   178
 #define IDD_SETTINGS_EXPLORER           178
 #define VK_MEDIA_PLAY_PAUSE             0xB3
 #define EM_SETRECT                      0x00B3

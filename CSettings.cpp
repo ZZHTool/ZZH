@@ -120,8 +120,8 @@ BOOL CSettings::OnInitDialog()
 		//判断是否已经设置开机启动
 		TCHAR PowerBoot[MAX_PATH] = {};
 		DWORD nLongth = MAX_PATH;
-		long result1 = RegGetValue(hKey1, NULL, L"ZZH系统工具", RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
-		long result2 = RegGetValue(hKey2, NULL, L"ZZH系统工具", RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
+		long result1 = RegGetValueW(hKey1, NULL, L"ZZH系统工具", RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
+		long result2 = RegGetValueW(hKey2, NULL, L"ZZH系统工具", RRF_RT_REG_SZ, 0, PowerBoot, &nLongth);
 		if (result1 == ERROR_SUCCESS || result2 == ERROR_SUCCESS)
 		{
 			str.Format(L"当前:开启");

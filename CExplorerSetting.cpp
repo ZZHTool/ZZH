@@ -30,6 +30,7 @@ void CExplorerSetting::DoDataExchange(CDataExchange* pDX)
 
 
 BEGIN_MESSAGE_MAP(CExplorerSetting, CDialogEx)
+	ON_BN_CLICKED(IDC_BUTTON2, &CExplorerSetting::OnBnClickedButton2)
 END_MESSAGE_MAP()
 
 
@@ -38,6 +39,35 @@ END_MESSAGE_MAP()
 BOOL CExplorerSetting::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-
+	m_combo.AddString(L"开启");
+	m_combo.AddString(L"关闭");
+	m_combo1.AddString(L"开启");
+	m_combo1.AddString(L"关闭");
+	HKEY hKey;
+	CString lpRun = L"lnkfile";
+	LONG lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
+	if (lRet == ERROR_SUCCESS)
+	{
+		PVOID ab = nullptr;
+		LPDWORD abc = nullptr;
+		lRet = RegGetValueW(hKey,NULL, L"IsShortcut", RRF_RT_ANY , 0, ab, abc);
+		if (lRet == ERROR_SUCCESS)
+		{
+			m_combo.SetCurSel(1);
+		}
+		else
+		{
+			m_combo.SetCurSel(0);
+		}
+	}
+	else
+	{
+		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+	}
+	RegCloseKey(hKey);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+}
+void CExplorerSetting::OnBnClickedButton2()
+{
+	EndDialog(0);
 }

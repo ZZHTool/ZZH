@@ -23,4 +23,6 @@ protected:
 	CComboBox m_combo;
 	CComboBox m_combo1;
 	DECLARE_MESSAGE_MAP()
+public:
+	afx_msg void OnBnClickedButton2();
 };

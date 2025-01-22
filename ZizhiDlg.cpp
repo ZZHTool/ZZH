@@ -21,6 +21,7 @@
 #include <winreg.h>
 #include <WinUser.h>
 #include <WinBase.h>
+#include <CExplorerSetting.h>
 
 
 
@@ -157,25 +158,26 @@ void ZizhiDlg::OnBnClickedBotton4()
 
 void ZizhiDlg::OnBnClickedBotton5()
 {
-	int i = MessageBoxW(L"点击是去除快捷方式小箭头，点击否恢复快捷方式小箭头", L"去除快捷方式小箭头", MB_ICONINFORMATION | MB_TOPMOST | MB_YESNOCANCEL);
+	/*int i = MessageBoxW(L"点击是去除快捷方式小箭头，点击否恢复快捷方式小箭头", L"去除快捷方式小箭头", MB_ICONINFORMATION | MB_TOPMOST | MB_YESNOCANCEL);
 	if (i == IDYES)
 	{
 		HKEY hKey;
-		LPCTSTR lpszSubKey = L"lnkfile";
-		LONG lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpszSubKey, 0, KEY_ALL_ACCESS, &hKey);
-		if (lRet == ERROR_SUCCESS) {
+		CString lpRun = L"lnkfile";
+		LONG lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
+		if (lRet == ERROR_SUCCESS) 
+		{
 			lRet = RegDeleteValueW(hKey, L"IsShortcut");
 			if (lRet == ERROR_SUCCESS)
 			{
 				ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
 				MessageBoxW(L"去除快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
 			}
-			RegCloseKey(hKey);
 		}
 		else
 		{
 			MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
 		}
+		RegCloseKey(hKey);
 	}
 	else if (i == IDNO)
 	{
@@ -200,5 +202,8 @@ void ZizhiDlg::OnBnClickedBotton5()
 			}
 		}
 		RegCloseKey(hKey);
-	}
+	}*/
+	CExplorerSetting* dlg = new CExplorerSetting;
+	dlg->Create(IDD_SETTINGS_EXPLORER, this);
+	dlg->ShowWindow(SW_SHOW);
 }
