@@ -87,6 +87,9 @@
     <ClInclude Include="MyThreadDlg.h">
       <Filter>头文件</Filter>
     </ClInclude>
+    <ClInclude Include="CExplorerSetting.h">
+      <Filter>头文件</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MFCApplication2Dlg.cpp">
@@ -150,6 +153,9 @@
       <Filter>源文件</Filter>
     </ClCompile>
     <ClCompile Include="MyThreadDlg.cpp">
+      <Filter>源文件</Filter>
+    </ClCompile>
+    <ClCompile Include="CExplorerSetting.cpp">
       <Filter>源文件</Filter>
     </ClCompile>
   </ItemGroup>

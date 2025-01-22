@@ -167,7 +167,7 @@ void ZizhiDlg::OnBnClickedBotton5()
 			lRet = RegDeleteValueW(hKey, L"IsShortcut");
 			if (lRet == ERROR_SUCCESS)
 			{
-				ShellExecute(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
+				ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
 				MessageBoxW(L"去除快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
 			}
 			RegCloseKey(hKey);
@@ -179,16 +179,16 @@ void ZizhiDlg::OnBnClickedBotton5()
 	}
 	else if (i == IDNO)
 	{
-		HKEY hKey = NULL;
+		HKEY hKey;
 		CString lpRun = L"lnkfile";
-		long lRet = RegOpenKeyEx(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
+		long lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
 		if (lRet != ERROR_SUCCESS)
 		{
 			MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
 		}
 		else
 		{
-			lRet = RegSetValueEx(hKey, L"IsShortcut", 0, REG_DWORD, 0, 0);
+			lRet = RegSetValueExW(hKey, L"IsShortcut", 0, REG_DWORD, 0, 0);
 			if (lRet != ERROR_SUCCESS)
 			{
 				MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);

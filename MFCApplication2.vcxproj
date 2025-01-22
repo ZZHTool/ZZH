@@ -191,6 +191,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="CBingdu.h" />
+    <ClInclude Include="CExplorerSetting.h" />
     <ClInclude Include="CHome.h" />
     <ClInclude Include="ClistCtrlEx.h" />
     <ClInclude Include="CSettings.h" />
@@ -217,6 +218,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="CBingdu.cpp" />
+    <ClCompile Include="CExplorerSetting.cpp" />
     <ClCompile Include="CHome.cpp" />
     <ClCompile Include="ClistCtrlEx.cpp" />
     <ClCompile Include="CSettings.cpp" />
