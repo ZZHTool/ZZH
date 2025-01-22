@@ -31,6 +31,7 @@ void CExplorerSetting::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CExplorerSetting, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CExplorerSetting::OnBnClickedButton2)
+	ON_BN_CLICKED(IDOK, &CExplorerSetting::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -67,7 +68,13 @@ BOOL CExplorerSetting::OnInitDialog()
 	RegCloseKey(hKey);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
+
 void CExplorerSetting::OnBnClickedButton2()
 {
 	EndDialog(0);
+}
+
+void CExplorerSetting::OnBnClickedOk()
+{
+
 }

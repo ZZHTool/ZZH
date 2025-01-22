@@ -20,9 +20,10 @@ public:
 protected:
 	virtual void DoDataExchange(CDataExchange* pDX);    // DDX/DDV 支持
 	virtual BOOL OnInitDialog();
-	CComboBox m_combo;
-	CComboBox m_combo1;
 	DECLARE_MESSAGE_MAP()
 public:
+	CComboBox m_combo;
+	CComboBox m_combo1;
 	afx_msg void OnBnClickedButton2();
+	afx_msg void OnBnClickedOk();
 };
