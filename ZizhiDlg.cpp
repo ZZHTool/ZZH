@@ -160,11 +160,11 @@ void ZizhiDlg::OnBnClickedBotton5()
 	int i = MessageBoxW(L"点击是去除快捷方式小箭头，点击否恢复快捷方式小箭头", L"去除快捷方式小箭头", MB_ICONINFORMATION | MB_TOPMOST | MB_YESNOCANCEL);
 	if (i == IDYES)
 	{
-		HKEY hKey = NULL;
+		HKEY hKey;
 		LPCTSTR lpszSubKey = L"lnkfile";
-		LONG lRet = RegOpenKeyEx(HKEY_CLASSES_ROOT, lpszSubKey, 0, KEY_ALL_ACCESS, &hKey);
+		LONG lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpszSubKey, 0, KEY_ALL_ACCESS, &hKey);
 		if (lRet == ERROR_SUCCESS) {
-			lRet = RegDeleteValue(hKey, L"IsShortcut");
+			lRet = RegDeleteValueW(hKey, L"IsShortcut");
 			if (lRet == ERROR_SUCCESS)
 			{
 				ShellExecute(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
