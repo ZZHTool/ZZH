@@ -76,5 +76,58 @@ void CExplorerSetting::OnBnClickedButton2()
 
 void CExplorerSetting::OnBnClickedOk()
 {
-
+	int i = m_combo.GetCurSel();
+	HKEY hKey;
+	CString lpRun = L"lnkfile";
+	PVOID ab = nullptr;
+	LPDWORD abc = nullptr;
+	if (i == 0)
+	{
+		long lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
+		if (lRet == ERROR_SUCCESS)
+		{
+			lRet = RegGetValueW(hKey, NULL, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
+			if (lRet == ERROR_SUCCESS)
+			{
+				lRet = RegDeleteValueW(hKey, L"IsShortcut");
+				if (lRet == ERROR_SUCCESS)
+				{
+					ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
+					MessageBoxW(L"去除快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
+				}
+			}
+		}
+		else
+		{
+			MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
+		}
+		RegCloseKey(hKey);
+	}
+	else
+	{
+		long lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
+		if (lRet != ERROR_SUCCESS)
+		{
+			MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
+		}
+		else
+		{
+			lRet = RegGetValueW(hKey, NULL, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
+			if (lRet != ERROR_SUCCESS)
+			{
+				lRet = RegSetValueExW(hKey, L"IsShortcut", 0, REG_DWORD, 0, 0);
+				if (lRet != ERROR_SUCCESS)
+				{
+					MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
+				}
+				else
+				{
+					ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
+					MessageBoxW(L"开启快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
+				}
+			}
+		}
+		RegCloseKey(hKey);
+	}
+	EndDialog(0);
 }
