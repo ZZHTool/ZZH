@@ -142,7 +142,7 @@ void ZizhiDlg::OnBnClickedBotton3()
 
 void ZizhiDlg::OnBnClickedBotton4()
 {
-	ShellExecute(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
+	ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
 	MessageBoxW(L"重启Windows文件资源管理器成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
 	NOTIFYICONDATA NotifyIcon{};
 	NotifyIcon.cbSize = sizeof(NOTIFYICONDATA);
