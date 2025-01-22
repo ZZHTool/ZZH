@@ -232,7 +232,6 @@ BOOL CHome::OnInitDialog()
 	return TRUE;
 }
 
-
 void CHome::OnPaint()
 {
 	if (IsIconic())
