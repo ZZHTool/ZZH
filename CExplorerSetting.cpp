@@ -142,6 +142,31 @@ LPCWSTR stringToLPCWSTR(const std::string& str) {
 	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wstr, len);
 	return wstr;
 }
+
+int getregistryIntValue(const wchar_t* keyPath, const wchar_t* valueName)
+{
+	HKEY hKey;
+	LONG result;
+	DWORD valueSize = sizeof(DWORD);
+	DWORD valueRead = 0;
+	int intValue = 0;
+
+	result = RegOpenKeyExW(HKEY_CURRENT_USER, keyPath, 0, KEY_READ, &hKey);
+	if (result == ERROR_SUCCESS)
+	{
+		result = RegQueryValueExW(hKey, valueName, 0, NULL, reinterpret_cast<BYTE*>(&valueRead), &valueSize);
+		if (result == ERROR_SUCCESS)
+		{
+			intValue = static_cast<int>(valueRead);
+		}
+		RegCloseKey(hKey);
+	}
+	else
+	{
+		MessageBoxW(0, L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+	}
+	return intValue;
+}
 // CExplorerSetting 对话框
 
 IMPLEMENT_DYNAMIC(CExplorerSetting, CDialogEx)
@@ -210,19 +235,27 @@ BOOL CExplorerSetting::OnInitDialog()
 		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 		EndDialog(0);
 	}
-	lRet = RegOpenKeyExW(HKEY_LOCAL_MACHINE, string, 0, KEY_ALL_ACCESS, &hKey1);
-	if (lRet == ERROR_SUCCESS)
+	long lRet1 = RegOpenKeyExW(HKEY_LOCAL_MACHINE, string, 0, KEY_ALL_ACCESS, &hKey1);
+	if (lRet1 == ERROR_SUCCESS)
 	{
 		PVOID ab = nullptr;
 		LPDWORD abc = nullptr;
-		lRet = RegGetValueW(hKey1, 0, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
+		lRet = RegGetValueW(hKey1, 0, L"EnableActivityFeed", RRF_RT_ANY, 0, ab, abc);
 		if (lRet == ERROR_SUCCESS)
 		{
-
+			int i = getregistryIntValue(L"SOFTWARE\\Policies\\Microsoft\\Windows\\System", L"EnableActivityFeed");
+			if (i == 0)
+			{
+				m_combo.SetCurSel(1);
+			}
+			else
+			{
+				m_combo.SetCurSel(0);
+			}
 		}
 		else
 		{
-
+			m_combo.SetCurSel(0);
 		}
 	}
 	else
@@ -231,6 +264,7 @@ BOOL CExplorerSetting::OnInitDialog()
 		EndDialog(0);
 	}
 	RegCloseKey(hKey);
+	RegCloseKey(hKey1);
 	const wchar_t* explorerName = L"explorer.exe";
 	const wchar_t* targetDllName = L"ExplorerBlurMica.dll";
 	DWORD explorerProcessId = GetProcessId(explorerName);
