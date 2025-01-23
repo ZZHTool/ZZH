@@ -4,6 +4,7 @@
 #include "resource.h"
 #include <Psapi.h>
 #include <TlHelp32.h>
+#include <fstream>
 
 // 检查指定进程是否加载了指定的DLL
 bool IsDllLoadedInProcess(const wchar_t* dllName, DWORD processId) {
@@ -38,7 +39,6 @@ bool IsDllLoadedInProcess(const wchar_t* dllName, DWORD processId) {
 	CloseHandle(hProcess);
 	return false;
 }
-
 // 将WCHAR*转换为const char*
 char* WCharToChar(const WCHAR* wstr) 
 {
@@ -76,58 +76,6 @@ DWORD GetProcessId(const wchar_t* processName)
 	CloseHandle(snapshot);
 	return 0;
 }
-
-// 注入DLL到指定进程
-BOOL InjectDLL(DWORD processId, const wchar_t* dllPath) 
-{
-	// 打开目标进程
-	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
-	if (hProcess == NULL) 
-	{
-		return FALSE;
-	}
-	// 在目标进程中分配内存
-	SIZE_T dllPathSize = (wcslen(dllPath) + 1) * sizeof(wchar_t);
-	LPVOID remoteDllPath = VirtualAllocEx(hProcess, NULL, dllPathSize, MEM_COMMIT, PAGE_READWRITE);
-	if (remoteDllPath == NULL) 
-	{
-		CloseHandle(hProcess);
-		return FALSE;
-	}
-	// 将DLL路径写入目标进程
-	if (!WriteProcessMemory(hProcess, remoteDllPath, dllPath, dllPathSize, NULL)) 
-	{
-		VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
-		CloseHandle(hProcess);
-		return FALSE;
-	}
-	// 获取LoadLibraryW函数地址
-	HMODULE hKernel32 = GetModuleHandle(L"kernel32.dll");
-	FARPROC loadLibraryAddr = GetProcAddress(hKernel32, "LoadLibraryW");
-	if (loadLibraryAddr == NULL) 
-	{
-		VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
-		CloseHandle(hProcess);
-		return FALSE;
-	}
-
-	// 创建远程线程执行LoadLibraryW
-	HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddr, remoteDllPath, 0, NULL);
-	if (hThread == NULL) 
-	{
-		VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
-		CloseHandle(hProcess);
-		return FALSE;
-	}
-	// 等待线程结束
-	WaitForSingleObject(hThread, INFINITE);
-	// 清理资源
-	CloseHandle(hThread);
-	VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
-	CloseHandle(hProcess);
-	return TRUE;
-}
-
 // 检查进程是否加载了指定的 DLL
 bool IsDllLoaded(DWORD processId, const wchar_t* dllName) 
 {
@@ -198,7 +146,7 @@ BOOL CExplorerSetting::OnInitDialog()
 	{
 		PVOID ab = nullptr;
 		LPDWORD abc = nullptr;
-		lRet = RegGetValueW(hKey,NULL, L"IsShortcut", RRF_RT_ANY , 0, ab, abc);
+		lRet = RegGetValueW(hKey,0, L"IsShortcut", RRF_RT_ANY , 0, ab, abc);
 		if (lRet == ERROR_SUCCESS)
 		{
 			m_combo.SetCurSel(1);
@@ -249,7 +197,7 @@ void CExplorerSetting::OnBnClickedOk()
 		long lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
 		if (lRet == ERROR_SUCCESS)
 		{
-			lRet = RegGetValueW(hKey, NULL, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
+			lRet = RegGetValueW(hKey, 0, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
 			if (lRet == ERROR_SUCCESS)
 			{
 				lRet = RegDeleteValueW(hKey, L"IsShortcut");
@@ -275,7 +223,7 @@ void CExplorerSetting::OnBnClickedOk()
 		}
 		else
 		{
-			lRet = RegGetValueW(hKey, NULL, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
+			lRet = RegGetValueW(hKey, 0, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
 			if (lRet != ERROR_SUCCESS)
 			{
 				lRet = RegSetValueExW(hKey, L"IsShortcut", 0, REG_DWORD, 0, 0);
@@ -295,22 +243,20 @@ void CExplorerSetting::OnBnClickedOk()
 	int j = m_combo1.GetCurSel();
 	if (j == 0)
 	{
-		//system("uninstall.cmd");
-		ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\uninstall.cmd", 0, 0, SW_HIDE);
-	}
-	else
-	{
-		//ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
-		const wchar_t* explorerName = L"explorer.exe";
-		const wchar_t* dllPath = L"ExplorerBlurMica.dll";
-		// 获取资源管理器进程ID
-		DWORD explorerProcessId = GetProcessId(explorerName);
-		if (explorerProcessId == 0) 
+		bool a = ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\uninstall.cmd", 0, 0, SW_HIDE);
+		if (a == true)
+		{
+			MessageBoxW(L"关闭文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
+		}
+		else
 		{
 			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 		}
-		// 注入DLL
-		if (InjectDLL(explorerProcessId, dllPath)) 
+	}
+	else
+	{
+		bool a = ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
+		if (a == true) 
 		{
 			MessageBoxW(L"开启文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
 		}
