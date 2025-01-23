@@ -123,6 +123,20 @@ BOOL CExplorerSetting::OnInitDialog()
 	RegCloseKey(hKey);
 	const wchar_t* processName = L"explorer.exe";
 	const wchar_t* dllName = L"ExplorerBlurMica.dll";
+	DWORD processId = GetProcessIdByName(processName);
+	if (processId == 0) 
+	{
+
+	}
+	// 检查目标DLL是否被加载
+	if (IsDllLoadedInProcess(dllName, processId)) 
+	{
+
+	}
+	else 
+	{
+
+	}
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
