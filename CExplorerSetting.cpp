@@ -127,6 +127,61 @@ BOOL InjectDLL(DWORD processId, const wchar_t* dllPath)
 	CloseHandle(hProcess);
 	return TRUE;
 }
+
+// 获取进程 ID
+DWORD GetProcessId(const wchar_t* processName) {
+	PROCESSENTRY32W processEntry;
+	processEntry.dwSize = sizeof(PROCESSENTRY32W);
+
+	// 创建进程快照
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+	if (snapshot == INVALID_HANDLE_VALUE) 
+	{
+		return 0;
+	}
+
+	// 遍历进程
+	if (Process32FirstW(snapshot, &processEntry)) 
+	{
+		do 
+		{
+			if (wcscmp(processEntry.szExeFile, processName) == 0) 
+			{
+				CloseHandle(snapshot);
+				return processEntry.th32ProcessID;
+			}
+		} while (Process32NextW(snapshot, &processEntry));
+	}
+	CloseHandle(snapshot);
+	return 0;
+}
+
+// 检查进程是否加载了指定的 DLL
+bool IsDllLoaded(DWORD processId, const wchar_t* dllName) 
+{
+	MODULEENTRY32W moduleEntry;
+	moduleEntry.dwSize = sizeof(MODULEENTRY32W);
+	// 创建模块快照
+	HANDLE hModuleSnap = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE | TH32CS_SNAPMODULE32, processId);
+	if (hModuleSnap == INVALID_HANDLE_VALUE) 
+	{
+		return false;
+	}
+	// 遍历模块
+	if (Module32FirstW(hModuleSnap, &moduleEntry)) 
+	{
+		do 
+		{
+			if (wcscmp(moduleEntry.szModule, dllName) == 0) 
+			{
+				CloseHandle(hModuleSnap);
+				return true;
+			}
+		} while (Module32NextW(hModuleSnap, &moduleEntry));
+	}
+	CloseHandle(hModuleSnap);
+	return false;
+}
 // CExplorerSetting 对话框
 
 IMPLEMENT_DYNAMIC(CExplorerSetting, CDialogEx)
@@ -288,7 +343,7 @@ void CExplorerSetting::OnBnClickedOk()
 		// 注入DLL
 		if (InjectDLL(explorerProcessId, dllPath)) 
 		{
-			
+			MessageBoxW(L"开启文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
 		}
 		else 
 		{
