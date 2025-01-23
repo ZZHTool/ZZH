@@ -10,7 +10,7 @@
 #include <afx.h>
 #include <afxwin.h>
 #include <basetsd.h>
-#include <CProcess.h>
+#include "CProcess.h"
 #include <minwindef.h>
 #include <windef.h>
 #include <WinUser.h>

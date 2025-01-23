@@ -4,7 +4,7 @@
 #include "pch.h"
 #include "afxdialogex.h"
 #include "CExplorerSetting.h"
-#include <resource.h>
+#include "resource.h"
 
 
 // CExplorerSetting 对话框
