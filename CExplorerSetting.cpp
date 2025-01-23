@@ -4,7 +4,24 @@
 #include "resource.h"
 #include <Psapi.h>
 #include <TlHelp32.h>
-#include <fstream>
+#include <afx.h>
+#include <afxdd_.h>
+#include <afxmsg_.h>
+#include <afxstr.h>
+#include <afxwin.h>
+#include <cstring>
+#include <string>
+#include <minwindef.h>
+#include <winerror.h>
+#include <handleapi.h>
+#include <libloaderapi.h>
+#include <processthreadsapi.h>
+#include <shellapi.h>
+#include <stringapiset.h>
+#include <WinNls.h>
+#include <winnt.h>
+#include <winreg.h>
+#include <WinUser.h>
 
 // 检查指定进程是否加载了指定的DLL
 bool IsDllLoadedInProcess(const wchar_t* dllName, DWORD processId) {
@@ -144,6 +161,8 @@ void CExplorerSetting::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO1, m_combo);
 	DDX_Control(pDX, IDC_COMBO2, m_combo1);
+	DDX_Control(pDX, IDC_BUTTON1, m_button);
+	DDX_Control(pDX, IDC_BUTTON2, m_button1);
 }
 
 
@@ -162,6 +181,8 @@ BOOL CExplorerSetting::OnInitDialog()
 	m_combo.AddString(L"关闭");
 	m_combo1.AddString(L"开启");
 	m_combo1.AddString(L"关闭");
+	m_button.SetMouseCursorHand();
+	m_button1.SetMouseCursorHand();
 	HKEY hKey;
 	CString lpRun = L"lnkfile";
 	LONG lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);

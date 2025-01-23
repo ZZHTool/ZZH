@@ -3,6 +3,7 @@
 #include <afxwin.h>
 #include <minwindef.h>
 #include <windef.h>
+#include <afxbutton.h>
 
 
 // CSettings 对话框
@@ -33,6 +34,8 @@ public:
 	CComboBox m_combo2;
 	CStatic m_ziqi;
 	CStatic m_clean;
+	CMFCButton m_button;
+	CMFCButton m_button1;
 	afx_msg void OnBnClickedOk2();
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnCbnSelchangeCombo3();

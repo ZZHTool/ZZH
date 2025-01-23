@@ -15,12 +15,8 @@
 #include "ZizhiDlg.h"
 #include <afxmsg_.h>
 #include <shellapi.h>
-#include "MFCApplication2Dlg.h"
 #include "MFCApplication2.h"
-#include <basetsd.h>
 #include <MyHead.h>
-#include <cstdlib>
-
 
 
 // XtDlg 对话框
@@ -57,8 +53,8 @@ BEGIN_MESSAGE_MAP(XtDlg, CDialogEx)
 	ON_BN_CLICKED(IDC_BOTTON13, &XtDlg::OnBnClickedBotton13)
 	ON_BN_CLICKED(IDC_BOTTON14, &XtDlg::OnBnClickedBotton14)
 	ON_BN_CLICKED(IDC_BOTTON15, &XtDlg::OnBnClickedBotton15)
-	ON_BN_CLICKED(IDC_BOTTON17, &XtDlg::OnBnClickedBotton17)
 	ON_BN_CLICKED(IDC_BOTTON16, &XtDlg::OnBnClickedBotton16)
+	ON_BN_CLICKED(IDC_BOTTON17, &XtDlg::OnBnClickedBotton17)
 	ON_BN_CLICKED(IDC_BOTTON18, &XtDlg::OnBnClickedBotton18)
 	ON_BN_CLICKED(IDC_BOTTON19, &XtDlg::OnBnClickedBotton19)
 END_MESSAGE_MAP()

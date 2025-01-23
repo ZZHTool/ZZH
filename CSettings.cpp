@@ -64,6 +64,8 @@ void CSettings::DoDataExchange(CDataExchange* pDX)
 	DDX_Control(pDX, IDC_STATIC6, m_ziqi);
 	DDX_Control(pDX, IDC_STATIC9, m_clean);
 	DDX_Control(pDX, IDC_EDIT1, m_edit1);
+	DDX_Control(pDX, IDOK, m_button);
+	DDX_Control(pDX, IDC_BUTTON2, m_button1);
 }
 
 

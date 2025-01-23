@@ -1366,6 +1366,7 @@
 #define psh9                            0x0408
 #define IDC_CHECK4                      1032
 #define IDC_BUTTON10                    1032
+#define IDC_STATIC12                    1032
 #define psh10                           0x0409
 #define IDC_CHECK5                      1033
 #define IDC_STATIC3                     1033
@@ -1738,8 +1739,8 @@
 #define LVS_TYPESTYLEMASK               0xfc00
 #define SPVERSION_MASK                  0x0000FF00
 #define HTERROR                         -2
-#define PWR_FAIL                        -1
 #define UNICODE_NOCHAR                  0xFFFF
+#define PWR_FAIL                        -1
 #define HTTRANSPARENT                   -1
 
 // Next default values for new objects

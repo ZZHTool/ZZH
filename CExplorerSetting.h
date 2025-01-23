@@ -1,5 +1,9 @@
 ﻿#pragma once
 #include "afxdialogex.h"
+#include <afx.h>
+#include <afxwin.h>
+#include <minwindef.h>
+#include <afxbutton.h>
 
 
 // CExplorerSetting 对话框
@@ -25,6 +29,8 @@ public:
 	bool touming;
 	CComboBox m_combo;
 	CComboBox m_combo1;
+	CMFCButton m_button;
+	CMFCButton m_button1;
 	afx_msg void OnBnClickedButton2();
 	afx_msg void OnBnClickedOk();
 };
