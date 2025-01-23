@@ -200,6 +200,7 @@ BOOL CExplorerSetting::OnInitDialog()
 	else 
 	{
 		m_combo1.SetCurSel(0);
+		touming = false;
 	}
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -269,17 +270,11 @@ void CExplorerSetting::OnBnClickedOk()
 	int j = m_combo1.GetCurSel();
 	if (j == 0)
 	{
-		if (touming = true)
-		{
-			ShellExecuteW(0, L"runas", Directory + b, 0, 0, SW_HIDE);
-		}
+		ShellExecuteW(0, L"runas", Directory + b, 0, 0, SW_HIDE);
 	}
 	else
 	{
-		if (touming = false)
-		{
-			ShellExecuteW(0, L"runas", Directory + a, 0, 0, SW_HIDE);
-		}
+		ShellExecuteW(0, L"runas", Directory + a, 0, 0, SW_HIDE);
 	}
 	delete[] Directory;
 	EndDialog(0);
