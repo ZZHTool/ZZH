@@ -128,34 +128,6 @@ BOOL InjectDLL(DWORD processId, const wchar_t* dllPath)
 	return TRUE;
 }
 
-// 获取进程 ID
-DWORD GetProcessId(const wchar_t* processName) {
-	PROCESSENTRY32W processEntry;
-	processEntry.dwSize = sizeof(PROCESSENTRY32W);
-
-	// 创建进程快照
-	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
-	if (snapshot == INVALID_HANDLE_VALUE) 
-	{
-		return 0;
-	}
-
-	// 遍历进程
-	if (Process32FirstW(snapshot, &processEntry)) 
-	{
-		do 
-		{
-			if (wcscmp(processEntry.szExeFile, processName) == 0) 
-			{
-				CloseHandle(snapshot);
-				return processEntry.th32ProcessID;
-			}
-		} while (Process32NextW(snapshot, &processEntry));
-	}
-	CloseHandle(snapshot);
-	return 0;
-}
-
 // 检查进程是否加载了指定的 DLL
 bool IsDllLoaded(DWORD processId, const wchar_t* dllName) 
 {
@@ -238,20 +210,18 @@ BOOL CExplorerSetting::OnInitDialog()
 	}
 	else
 	{
-		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 		EndDialog(0);
 	}
 	RegCloseKey(hKey);
-	const wchar_t* processName = L"explorer.exe";
-	const wchar_t* dllName = L"ExplorerBlurMica.dll";
-	DWORD processId = GetProcessIdByName(processName);
-	if (processId == 0) 
+	const wchar_t* explorerName = L"explorer.exe";
+	const wchar_t* targetDllName = L"ExplorerBlurMica.dll";
+	DWORD explorerProcessId = GetProcessId(explorerName);
+	if (explorerProcessId == 0) 
 	{
-		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
-		EndDialog(0);
+		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 	}
-	// 检查目标DLL是否被加载
-	if (IsDllLoadedInProcess(dllName, processId)) 
+	if (IsDllLoaded(explorerProcessId, targetDllName)) 
 	{
 		m_combo1.SetCurSel(1);
 	}
@@ -292,7 +262,7 @@ void CExplorerSetting::OnBnClickedOk()
 		}
 		else
 		{
-			MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
+			MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
 		}
 		RegCloseKey(hKey);
 	}
@@ -311,12 +281,12 @@ void CExplorerSetting::OnBnClickedOk()
 				lRet = RegSetValueExW(hKey, L"IsShortcut", 0, REG_DWORD, 0, 0);
 				if (lRet != ERROR_SUCCESS)
 				{
-					MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST);
+					MessageBoxW(L"打开注册表失败！", L"失败！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
 				}
 				else
 				{
 					ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
-					MessageBoxW(L"开启快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
+					MessageBoxW(L"开启快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
 				}
 			}
 		}
@@ -330,24 +300,23 @@ void CExplorerSetting::OnBnClickedOk()
 	}
 	else
 	{
-		//system("register.cmd");
-		ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
+		//ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
 		const wchar_t* explorerName = L"explorer.exe";
 		const wchar_t* dllPath = L"ExplorerBlurMica.dll";
 		// 获取资源管理器进程ID
 		DWORD explorerProcessId = GetProcessId(explorerName);
 		if (explorerProcessId == 0) 
 		{
-			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 		}
 		// 注入DLL
 		if (InjectDLL(explorerProcessId, dllPath)) 
 		{
-			MessageBoxW(L"开启文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
+			MessageBoxW(L"开启文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
 		}
 		else 
 		{
-			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 		}
 	}
 	EndDialog(0);
