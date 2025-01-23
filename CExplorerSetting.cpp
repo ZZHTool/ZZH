@@ -276,10 +276,6 @@ void CExplorerSetting::OnBnClickedOk()
 	{
 		ShellExecuteW(0, L"runas", Directory + a, 0, 0, SW_HIDE);
 	}
-	delete[] ab;
-	delete[] abc;
-	delete[] lpRun;
 	delete[] Directory;
-	delete[] a, b;
 	EndDialog(0);
 }
