@@ -120,8 +120,9 @@ BOOL CExplorerSetting::OnInitDialog()
 	{
 		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
 	}
-	m_combo1.SetCurSel(0);
 	RegCloseKey(hKey);
+	const wchar_t* processName = L"explorer.exe";
+	const wchar_t* dllName = L"ExplorerBlurMica.dll";
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
 
