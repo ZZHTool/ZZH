@@ -132,7 +132,7 @@ IMPLEMENT_DYNAMIC(CExplorerSetting, CDialogEx)
 CExplorerSetting::CExplorerSetting(CWnd* pParent /*=nullptr*/)
 	: CDialogEx(IDD_SETTINGS_EXPLORER, pParent)
 {
-
+	touming = false;
 }
 
 CExplorerSetting::~CExplorerSetting()
@@ -195,6 +195,7 @@ BOOL CExplorerSetting::OnInitDialog()
 	if (IsDllLoaded(explorerProcessId, targetDllName)) 
 	{
 		m_combo1.SetCurSel(1);
+		touming = true;
 	}
 	else 
 	{
@@ -226,8 +227,7 @@ void CExplorerSetting::OnBnClickedOk()
 				lRet = RegDeleteValueW(hKey, L"IsShortcut");
 				if (lRet == ERROR_SUCCESS)
 				{
-					ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
-					MessageBoxW(L"去除快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
+					MessageBoxW(L"去除快捷方式小箭头成功，点击重启文件资源管理器按钮生效！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST);
 				}
 			}
 		}
@@ -256,8 +256,7 @@ void CExplorerSetting::OnBnClickedOk()
 				}
 				else
 				{
-					ShellExecuteW(0, L"runas", L"cmd.exe", L"/c taskkill /f /im explorer.exe & start explorer.exe", 0, SW_HIDE);
-					MessageBoxW(L"开启快捷方式小箭头成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
+					MessageBoxW(L"开启快捷方式小箭头成功，点击重启文件资源管理器按钮生效！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
 				}
 			}
 		}
@@ -270,11 +269,17 @@ void CExplorerSetting::OnBnClickedOk()
 	int j = m_combo1.GetCurSel();
 	if (j == 0)
 	{
-		ShellExecuteW(0, L"runas", Directory + b, 0, 0, SW_HIDE);
+		if (touming = true)
+		{
+			ShellExecuteW(0, L"runas", Directory + b, 0, 0, SW_HIDE);
+		}
 	}
 	else
 	{
-		ShellExecuteW(0, L"runas", Directory + a, 0, 0, SW_HIDE);
+		if (touming = false)
+		{
+			ShellExecuteW(0, L"runas", Directory + a, 0, 0, SW_HIDE);
+		}
 	}
 	delete[] Directory;
 	EndDialog(0);

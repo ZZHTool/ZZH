@@ -22,6 +22,7 @@ protected:
 	virtual BOOL OnInitDialog();
 	DECLARE_MESSAGE_MAP()
 public:
+	bool touming;
 	CComboBox m_combo;
 	CComboBox m_combo1;
 	afx_msg void OnBnClickedButton2();
