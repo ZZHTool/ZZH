@@ -29,6 +29,7 @@ public:
 	bool touming;
 	CComboBox m_combo;
 	CComboBox m_combo1;
+	CComboBox m_combo2;
 	CMFCButton m_button;
 	CMFCButton m_button1;
 	afx_msg void OnBnClickedButton2();

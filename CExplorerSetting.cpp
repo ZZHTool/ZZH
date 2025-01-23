@@ -161,6 +161,7 @@ void CExplorerSetting::DoDataExchange(CDataExchange* pDX)
 	CDialogEx::DoDataExchange(pDX);
 	DDX_Control(pDX, IDC_COMBO1, m_combo);
 	DDX_Control(pDX, IDC_COMBO2, m_combo1);
+	DDX_Control(pDX, IDC_COMBO3, m_combo2);
 	DDX_Control(pDX, IDC_BUTTON1, m_button);
 	DDX_Control(pDX, IDC_BUTTON2, m_button1);
 }
@@ -181,11 +182,14 @@ BOOL CExplorerSetting::OnInitDialog()
 	m_combo.AddString(L"关闭");
 	m_combo1.AddString(L"开启");
 	m_combo1.AddString(L"关闭");
+	m_combo2.AddString(L"开启");
+	m_combo2.AddString(L"关闭");
 	m_button.SetMouseCursorHand();
 	m_button1.SetMouseCursorHand();
 	HKEY hKey;
 	CString lpRun = L"lnkfile";
-	LONG lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
+	CString string = L"SOFTWARE\\Policies\\Microsoft\\Windows\\System";
+	long lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
 	if (lRet == ERROR_SUCCESS)
 	{
 		PVOID ab = nullptr;
@@ -199,6 +203,16 @@ BOOL CExplorerSetting::OnInitDialog()
 		{
 			m_combo.SetCurSel(0);
 		}
+	}
+	else
+	{
+		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
+		EndDialog(0);
+	}
+	lRet = RegOpenKeyExW(HKEY_LOCAL_MACHINE, string, 0, KEY_ALL_ACCESS, &hKey);
+	if (lRet == ERROR_SUCCESS)
+	{
+
 	}
 	else
 	{
@@ -223,7 +237,7 @@ BOOL CExplorerSetting::OnInitDialog()
 		m_combo1.SetCurSel(0);
 		touming = false;
 	}
-	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
+	return TRUE;
 }
 
 void CExplorerSetting::OnBnClickedButton2()

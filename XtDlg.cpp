@@ -31,25 +31,6 @@ XtDlg::XtDlg(CWnd* pParent /*=nullptr*/)
 void XtDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialogEx::DoDataExchange(pDX);
-	DDX_Control(pDX, IDC_BOTTON, m_button);
-	DDX_Control(pDX, IDC_BOTTON2, m_button1);
-	DDX_Control(pDX, IDC_BOTTON3, m_button2);
-	DDX_Control(pDX, IDC_BOTTON4, m_button3);
-	DDX_Control(pDX, IDC_BOTTON5, m_button4);
-	DDX_Control(pDX, IDC_BOTTON6, m_button5);
-	DDX_Control(pDX, IDC_BOTTON7, m_button6);
-	DDX_Control(pDX, IDC_BOTTON8, m_button7);
-	DDX_Control(pDX, IDC_BOTTON9, m_button8);
-	DDX_Control(pDX, IDC_BOTTON10, m_button9);
-	DDX_Control(pDX, IDC_BOTTON11, m_button10);
-	DDX_Control(pDX, IDC_BOTTON12, m_button11);
-	DDX_Control(pDX, IDC_BOTTON13, m_button12);
-	DDX_Control(pDX, IDC_BOTTON14, m_button13);
-	DDX_Control(pDX, IDC_BOTTON15, m_button14);
-	DDX_Control(pDX, IDC_BOTTON16, m_button15);
-	DDX_Control(pDX, IDC_BOTTON17, m_button16);
-	DDX_Control(pDX, IDC_BOTTON18, m_button17);
-	DDX_Control(pDX, IDC_BOTTON19, m_button18);
 }
 
 
@@ -81,25 +62,6 @@ END_MESSAGE_MAP()
 BOOL XtDlg::OnInitDialog()
 {
 	CDialogEx::OnInitDialog();
-	m_button.SetMouseCursorHand();
-	m_button1.SetMouseCursorHand();
-	m_button2.SetMouseCursorHand();
-	m_button3.SetMouseCursorHand();
-	m_button4.SetMouseCursorHand();
-	m_button5.SetMouseCursorHand();
-	m_button6.SetMouseCursorHand();
-	m_button7.SetMouseCursorHand();
-	m_button8.SetMouseCursorHand();
-	m_button9.SetMouseCursorHand();
-	m_button10.SetMouseCursorHand();
-	m_button11.SetMouseCursorHand();
-	m_button12.SetMouseCursorHand();
-	m_button13.SetMouseCursorHand();
-	m_button14.SetMouseCursorHand();
-	m_button15.SetMouseCursorHand();
-	m_button16.SetMouseCursorHand();
-	m_button17.SetMouseCursorHand();
-	m_button18.SetMouseCursorHand();
 	SetIcon(m_hIcon, TRUE);
 	SetIcon(m_hIcon, FALSE);
 	return TRUE;

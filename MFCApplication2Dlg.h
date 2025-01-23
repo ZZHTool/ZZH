@@ -4,6 +4,7 @@
 #include <minwindef.h>
 #include <windef.h>
 #include <basetsd.h>
+#include <afxbutton.h>
 // CMFCApplication2Dlg 对话框
 class CMFCApplication2Dlg : public CDialogEx
 {

@@ -1373,6 +1373,7 @@
 #define psh11                           0x040a
 #define IDC_CHECK6                      1034
 #define IDC_STATIC4                     1034
+#define IDC_STATIC13                    1034
 #define psh12                           0x040b
 #define IDC_CHECK7                      1035
 #define IDC_STATIC5                     1035
