@@ -39,29 +39,94 @@ bool IsDllLoadedInProcess(const wchar_t* dllName, DWORD processId) {
 	return false;
 }
 
-// 根据进程名获取进程ID
-DWORD GetProcessIdByName(const wchar_t* processName) {
-	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
-	if (hSnapshot == INVALID_HANDLE_VALUE) {
+// 将WCHAR*转换为const char*
+char* WCharToChar(const WCHAR* wstr) 
+{
+	int len = WideCharToMultiByte(CP_ACP, 0, wstr, -1, NULL, 0, NULL, NULL);
+	if (len == 0) 
+	{
+		return nullptr;
+	}
+	char* str = new char[len];
+	WideCharToMultiByte(CP_ACP, 0, wstr, -1, str, len, NULL, NULL);
+	return str;
+}
+// 获取进程ID
+DWORD GetProcessId(const wchar_t* processName) 
+{
+	PROCESSENTRY32W processEntry{};
+	processEntry.dwSize = sizeof(PROCESSENTRY32W);
+	// 创建进程快照
+	HANDLE snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, NULL);
+	if (snapshot == INVALID_HANDLE_VALUE) 
+	{
 		return 0;
 	}
-
-	PROCESSENTRY32W pe32;
-	pe32.dwSize = sizeof(PROCESSENTRY32W);
-
-	if (Process32FirstW(hSnapshot, &pe32)) {
+	// 遍历进程
+	if (Process32FirstW(snapshot, &processEntry)) 
+	{
 		do {
-			if (wcscmp(pe32.szExeFile, processName) == 0) {
-				CloseHandle(hSnapshot);
-				return pe32.th32ProcessID;
+			if (wcscmp(processEntry.szExeFile, processName) == 0) 
+			{  // 使用宽字符版本的字符串比较函数
+				CloseHandle(snapshot);
+				return processEntry.th32ProcessID;
 			}
-		} while (Process32NextW(hSnapshot, &pe32));
+		} while (Process32NextW(snapshot, &processEntry));
 	}
-
-	CloseHandle(hSnapshot);
+	CloseHandle(snapshot);
 	return 0;
 }
 
+// 注入DLL到指定进程
+BOOL InjectDLL(DWORD processId, const wchar_t* dllPath) 
+{
+	// 打开目标进程
+	HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, FALSE, processId);
+	if (hProcess == NULL) 
+	{
+		return FALSE;
+	}
+	// 在目标进程中分配内存
+	SIZE_T dllPathSize = (wcslen(dllPath) + 1) * sizeof(wchar_t);
+	LPVOID remoteDllPath = VirtualAllocEx(hProcess, NULL, dllPathSize, MEM_COMMIT, PAGE_READWRITE);
+	if (remoteDllPath == NULL) 
+	{
+		CloseHandle(hProcess);
+		return FALSE;
+	}
+	// 将DLL路径写入目标进程
+	if (!WriteProcessMemory(hProcess, remoteDllPath, dllPath, dllPathSize, NULL)) 
+	{
+		VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
+		CloseHandle(hProcess);
+		return FALSE;
+	}
+	// 获取LoadLibraryW函数地址
+	HMODULE hKernel32 = GetModuleHandle(L"kernel32.dll");
+	FARPROC loadLibraryAddr = GetProcAddress(hKernel32, "LoadLibraryW");
+	if (loadLibraryAddr == NULL) 
+	{
+		VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
+		CloseHandle(hProcess);
+		return FALSE;
+	}
+
+	// 创建远程线程执行LoadLibraryW
+	HANDLE hThread = CreateRemoteThread(hProcess, NULL, 0, (LPTHREAD_START_ROUTINE)loadLibraryAddr, remoteDllPath, 0, NULL);
+	if (hThread == NULL) 
+	{
+		VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
+		CloseHandle(hProcess);
+		return FALSE;
+	}
+	// 等待线程结束
+	WaitForSingleObject(hThread, INFINITE);
+	// 清理资源
+	CloseHandle(hThread);
+	VirtualFreeEx(hProcess, remoteDllPath, 0, MEM_RELEASE);
+	CloseHandle(hProcess);
+	return TRUE;
+}
 // CExplorerSetting 对话框
 
 IMPLEMENT_DYNAMIC(CExplorerSetting, CDialogEx)
