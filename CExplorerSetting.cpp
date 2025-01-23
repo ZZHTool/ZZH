@@ -1,11 +1,66 @@
-﻿// CExplorerSetting.cpp: 实现文件
-//
-
-#include "pch.h"
-#include "afxdialogex.h"
+﻿#include "afxdialogex.h"
 #include "CExplorerSetting.h"
+#include "pch.h"
 #include "resource.h"
+#include <Psapi.h>
+#include <TlHelp32.h>
 
+// 检查指定进程是否加载了指定的DLL
+bool IsDllLoadedInProcess(const wchar_t* dllName, DWORD processId) {
+	HANDLE hProcess = OpenProcess(PROCESS_QUERY_INFORMATION | PROCESS_VM_READ, FALSE, processId);
+	if (hProcess == NULL) {
+		return false;
+	}
+
+	HMODULE hMods[1024];
+	DWORD cbNeeded;
+
+	// 枚举进程加载的所有模块
+	if (EnumProcessModules(hProcess, hMods, sizeof(hMods), &cbNeeded)) {
+		for (unsigned int i = 0; i < (cbNeeded / sizeof(HMODULE)); i++) {
+			wchar_t szModName[MAX_PATH];
+			// 获取模块的完整路径
+			if (GetModuleFileNameExW(hProcess, hMods[i], szModName, sizeof(szModName) / sizeof(wchar_t))) {
+				// 提取文件名
+				wchar_t* fileName = wcsrchr(szModName, L'\\');
+				if (fileName != NULL) {
+					fileName++;
+					// 检查文件名是否与目标DLL名称匹配
+					if (wcscmp(fileName, dllName) == 0) {
+						CloseHandle(hProcess);
+						return true;
+					}
+				}
+			}
+		}
+	}
+
+	CloseHandle(hProcess);
+	return false;
+}
+
+// 根据进程名获取进程ID
+DWORD GetProcessIdByName(const wchar_t* processName) {
+	HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
+	if (hSnapshot == INVALID_HANDLE_VALUE) {
+		return 0;
+	}
+
+	PROCESSENTRY32W pe32;
+	pe32.dwSize = sizeof(PROCESSENTRY32W);
+
+	if (Process32FirstW(hSnapshot, &pe32)) {
+		do {
+			if (wcscmp(pe32.szExeFile, processName) == 0) {
+				CloseHandle(hSnapshot);
+				return pe32.th32ProcessID;
+			}
+		} while (Process32NextW(hSnapshot, &pe32));
+	}
+
+	CloseHandle(hSnapshot);
+	return 0;
+}
 
 // CExplorerSetting 对话框
 
@@ -31,7 +86,7 @@ void CExplorerSetting::DoDataExchange(CDataExchange* pDX)
 
 BEGIN_MESSAGE_MAP(CExplorerSetting, CDialogEx)
 	ON_BN_CLICKED(IDC_BUTTON2, &CExplorerSetting::OnBnClickedButton2)
-	ON_BN_CLICKED(IDOK, &CExplorerSetting::OnBnClickedOk)
+	ON_BN_CLICKED(IDC_BUTTON1, &CExplorerSetting::OnBnClickedOk)
 END_MESSAGE_MAP()
 
 
@@ -65,6 +120,7 @@ BOOL CExplorerSetting::OnInitDialog()
 	{
 		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
 	}
+	m_combo1.SetCurSel(0);
 	RegCloseKey(hKey);
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
@@ -130,15 +186,15 @@ void CExplorerSetting::OnBnClickedOk()
 		RegCloseKey(hKey);
 	}
 	int j = m_combo1.GetCurSel();
-	if (j == 1)
+	if (j == 0)
 	{
-		system("uninstall.cmd");
-		ShellExecuteW(0, L"runas", L"..\\uninstall.cmd", 0, 0, SW_SHOW);
+		//system("uninstall.cmd");
+		ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\uninstall.cmd", 0, 0, SW_HIDE);
 	}
-	else if (j == 2)
+	else
 	{
-		system("register.cmd");
-		ShellExecuteW(0, L"runas", L"..\\register.cmd",0, 0, SW_SHOW);
+		//system("register.cmd");
+		ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
 	}
 	EndDialog(0);
 }
