@@ -129,5 +129,16 @@ void CExplorerSetting::OnBnClickedOk()
 		}
 		RegCloseKey(hKey);
 	}
+	int j = m_combo1.GetCurSel();
+	if (j == 1)
+	{
+		system("uninstall.cmd");
+		ShellExecuteW(0, L"runas", L"..\\uninstall.cmd", 0, 0, SW_SHOW);
+	}
+	else if (j == 2)
+	{
+		system("register.cmd");
+		ShellExecuteW(0, L"runas", L"..\\register.cmd",0, 0, SW_SHOW);
+	}
 	EndDialog(0);
 }
