@@ -102,6 +102,29 @@ bool IsDllLoaded(DWORD processId, const wchar_t* dllName)
 	CloseHandle(hModuleSnap);
 	return false;
 }
+
+std::string getExecutableDirectory() {
+	char buffer[MAX_PATH];
+	// 获取当前可执行文件的完整路径
+	GetModuleFileNameA(NULL, buffer, MAX_PATH);
+	std::string fullPath(buffer);
+	// 找到最后一个反斜杠的位置
+	size_t pos = fullPath.find_last_of("\\");
+	if (pos != std::string::npos) {
+		// 提取文件夹路径
+		return fullPath.substr(0, pos);
+	}
+	return "";
+}
+LPCWSTR stringToLPCWSTR(const std::string& str) {
+	int len = MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, NULL, 0);
+	if (len == 0) {
+		return nullptr;
+	}
+	wchar_t* wstr = new wchar_t[len];
+	MultiByteToWideChar(CP_ACP, 0, str.c_str(), -1, wstr, len);
+	return wstr;
+}
 // CExplorerSetting 对话框
 
 IMPLEMENT_DYNAMIC(CExplorerSetting, CDialogEx)
@@ -240,30 +263,23 @@ void CExplorerSetting::OnBnClickedOk()
 		}
 		RegCloseKey(hKey);
 	}
+	std::string directory = getExecutableDirectory();
+	LPCWSTR Directory = stringToLPCWSTR(directory);
+	CString a = L"\\register.cmd";
+	CString b = L"\\uninstall.cmd";
 	int j = m_combo1.GetCurSel();
 	if (j == 0)
 	{
-		bool a = ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\uninstall.cmd", 0, 0, SW_HIDE);
-		if (a == true)
-		{
-			MessageBoxW(L"关闭文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
-		}
-		else
-		{
-			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
-		}
+		ShellExecuteW(0, L"runas", Directory + b, 0, 0, SW_HIDE);
 	}
 	else
 	{
-		bool a = ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
-		if (a == true) 
-		{
-			MessageBoxW(L"开启文件资源管理器背景透明成功！", L"成功！", MB_ICONINFORMATION | MB_TOPMOST | MB_OK);
-		}
-		else 
-		{
-			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
-		}
+		ShellExecuteW(0, L"runas", Directory + a, 0, 0, SW_HIDE);
 	}
+	delete[] ab;
+	delete[] abc;
+	delete[] lpRun;
+	delete[] Directory;
+	delete[] a, b;
 	EndDialog(0);
 }
