@@ -119,6 +119,7 @@ BOOL CExplorerSetting::OnInitDialog()
 	else
 	{
 		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+		EndDialog(0);
 	}
 	RegCloseKey(hKey);
 	const wchar_t* processName = L"explorer.exe";
@@ -126,7 +127,8 @@ BOOL CExplorerSetting::OnInitDialog()
 	DWORD processId = GetProcessIdByName(processName);
 	if (processId == 0) 
 	{
-
+		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+		EndDialog(0);
 	}
 	// 检查目标DLL是否被加载
 	if (IsDllLoadedInProcess(dllName, processId)) 
