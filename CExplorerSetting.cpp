@@ -133,11 +133,11 @@ BOOL CExplorerSetting::OnInitDialog()
 	// 检查目标DLL是否被加载
 	if (IsDllLoadedInProcess(dllName, processId)) 
 	{
-
+		m_combo1.SetCurSel(1);
 	}
 	else 
 	{
-
+		m_combo1.SetCurSel(0);
 	}
 	return TRUE;  // 除非将焦点设置到控件，否则返回 TRUE
 }
