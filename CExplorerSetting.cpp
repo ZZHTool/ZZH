@@ -187,6 +187,7 @@ BOOL CExplorerSetting::OnInitDialog()
 	m_button.SetMouseCursorHand();
 	m_button1.SetMouseCursorHand();
 	HKEY hKey;
+	HKEY hKey1;
 	CString lpRun = L"lnkfile";
 	CString string = L"SOFTWARE\\Policies\\Microsoft\\Windows\\System";
 	long lRet = RegOpenKeyExW(HKEY_CLASSES_ROOT, lpRun, 0, KEY_ALL_ACCESS, &hKey);
@@ -209,10 +210,20 @@ BOOL CExplorerSetting::OnInitDialog()
 		MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR | MB_OK);
 		EndDialog(0);
 	}
-	lRet = RegOpenKeyExW(HKEY_LOCAL_MACHINE, string, 0, KEY_ALL_ACCESS, &hKey);
+	lRet = RegOpenKeyExW(HKEY_LOCAL_MACHINE, string, 0, KEY_ALL_ACCESS, &hKey1);
 	if (lRet == ERROR_SUCCESS)
 	{
+		PVOID ab = nullptr;
+		LPDWORD abc = nullptr;
+		lRet = RegGetValueW(hKey1, 0, L"IsShortcut", RRF_RT_ANY, 0, ab, abc);
+		if (lRet == ERROR_SUCCESS)
+		{
 
+		}
+		else
+		{
+
+		}
 	}
 	else
 	{
