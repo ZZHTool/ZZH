@@ -277,6 +277,23 @@ void CExplorerSetting::OnBnClickedOk()
 	{
 		//system("register.cmd");
 		ShellExecuteW(0, L"runas", L"E:\\系统\\C++\\ZZH系统工具\\x64\\Release\\register.cmd",0, 0, SW_HIDE);
+		const wchar_t* explorerName = L"explorer.exe";
+		const wchar_t* dllPath = L"ExplorerBlurMica.dll";
+		// 获取资源管理器进程ID
+		DWORD explorerProcessId = GetProcessId(explorerName);
+		if (explorerProcessId == 0) 
+		{
+			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+		}
+		// 注入DLL
+		if (InjectDLL(explorerProcessId, dllPath)) 
+		{
+			
+		}
+		else 
+		{
+			MessageBoxW(L"相关服务错误，请使用管理员身份重新启动程序，或向ZZH反馈问题!", L"软件错误", MB_TOPMOST | MB_ICONERROR);
+		}
 	}
 	EndDialog(0);
 }
