@@ -1318,11 +1318,15 @@
 #define IDC_COMBO3                      1019
 #define IDC_BOTTON9                     1020
 #define IDC_COMBO                       1020
+#define IDC_COMBO4                      1020
 #define IDC_BOTTON10                    1021
 #define IDC_TAB1                        1021
+#define IDC_COMBO5                      1021
 #define IDC_BOTTON11                    1022
+#define IDC_COMBO6                      1022
 #define CF_GDIOBJLAST                   0x03FF
 #define IDC_BOTTON12                    1023
+#define IDC_COMBO7                      1023
 #define _WIN32_WINNT_NT4                0x0400
 #define _WIN32_IE_IE40                  0x0400
 #define WM_USER                         0x0400
@@ -1338,10 +1342,12 @@
 #define ctlFirst                        0x0400
 #define psh1                            0x0400
 #define IDC_BOTTON13                    1024
+#define IDC_COMBO8                      1024
 #define _WIN32_IE_IE401                 0x0401
 #define psh2                            0x0401
 #define IDC_BOTTON14                    1025
 #define IDC_EXPLORER1                   1025
+#define IDC_COMBO9                      1025
 #define psh3                            0x0402
 #define IDC_BUTTON7                     1026
 #define IDC_BOTTON15                    1026
@@ -1373,7 +1379,6 @@
 #define psh11                           0x040a
 #define IDC_CHECK6                      1034
 #define IDC_STATIC4                     1034
-#define IDC_STATIC13                    1034
 #define psh12                           0x040b
 #define IDC_CHECK7                      1035
 #define IDC_STATIC5                     1035
@@ -1382,6 +1387,7 @@
 #define IDC_CHECK8                      1036
 #define IDC_STATIC2                     1036
 #define ID_CANCEL                       1036
+#define IDC_STATIC13                    1036
 #define psh14                           0x040d
 #define IDC_STATIC7                     1037
 #define IDC_CHECK9                      1037
