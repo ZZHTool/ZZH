@@ -1402,6 +1402,7 @@
 #define _WIN32_WINDOWS                  0x0410
 #define chx1                            0x0410
 #define IDC_STATIC10                    1040
+#define IDC_STC_GIF                     1040
 #define chx2                            0x0411
 #define IDC_STATIC11                    1041
 #define chx3                            0x0412
@@ -1756,7 +1757,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        167
 #define _APS_NEXT_COMMAND_VALUE         32776
-#define _APS_NEXT_CONTROL_VALUE         1040
+#define _APS_NEXT_CONTROL_VALUE         1041
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif
