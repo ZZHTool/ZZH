@@ -5,7 +5,6 @@
 #include <windef.h>
 #include <afxbutton.h>
 
-
 // CSettings 对话框
 
 class CSettings : public CDialogEx
